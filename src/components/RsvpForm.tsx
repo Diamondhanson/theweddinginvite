@@ -4,28 +4,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useId, useState } from "react";
 import { weddingConfig as c } from "@/data/wedding-config";
 import type { ResolvedGuest } from "@/data/guests";
-import {
-  getSavedRsvp,
-  submitRsvp,
-  validateRsvp,
-  type Attendance,
-  type RsvpRecord,
-} from "@/lib/rsvp";
+import { getSavedRsvp, submitRsvp, validateRsvp, type RsvpRecord } from "@/lib/rsvp";
 import { BeadDivider } from "./art/Dividers";
 import { GatePass } from "./GatePass";
-
-type Errors = Partial<Record<"fullName" | "phone" | "attendance", string>>;
 
 export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
   const uid = useId();
   // Mode A (personal, from URL) ↔ Mode B (open / manual)
   const [personal, setPersonal] = useState<boolean>(Boolean(guest));
   const [fullName, setFullName] = useState(guest?.name ?? "");
-  const [phone, setPhone] = useState(guest?.phone ?? "");
-  const [attendance, setAttendance] = useState<Attendance | "">("");
   const [guestCount, setGuestCount] = useState(1);
   const [note, setNote] = useState("");
-  const [errors, setErrors] = useState<Errors>({});
+  const [nameError, setNameError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [record, setRecord] = useState<RsvpRecord | null>(null);
@@ -40,8 +30,6 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
       if (!alive || !saved) return;
       setRecord(saved);
       setFullName(saved.fullName);
-      setPhone(saved.phone);
-      setAttendance(saved.attendance);
       setGuestCount(Math.max(1, saved.guestCount));
       setNote(saved.note);
     });
@@ -53,25 +41,23 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
   const switchToOpen = () => {
     setPersonal(false);
     setFullName("");
-    setPhone("");
     setGuestCount(1);
-    setErrors({});
+    setNameError("");
   };
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const found = validateRsvp({ fullName, phone, attendance: attendance as Attendance });
-    setErrors(found);
-    if (Object.keys(found).length) return;
+    const found = validateRsvp({ fullName });
+    setNameError(found.fullName ?? "");
+    if (found.fullName) return;
 
     setSubmitting(true);
     setSubmitError("");
     try {
       const saved = await submitRsvp({
         fullName: fullName.trim(),
-        phone: phone.trim(),
-        attendance: attendance as Attendance,
-        guestCount: attendance === "accepts" ? Math.min(guestCount, maxGuests) : 0,
+        attendance: "accepts",
+        guestCount: Math.min(guestCount, maxGuests),
         note: note.trim(),
         guestCode: personal ? guest?.code : undefined,
       });
@@ -121,15 +107,20 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
                 <p className="font-display text-lg italic text-espresso/75">
                   We can&apos;t wait to celebrate with you.
                 </p>
-                <p className="mt-1 text-sm text-espresso/60">Fill in your details below to reply.</p>
+                <p className="mt-1 text-sm text-espresso/60">Enter your name below to confirm.</p>
               </div>
             )}
 
             <div className="my-5"><BeadDivider /></div>
 
             <div className="grid gap-5">
-              {/* name */}
-              <Field label="Full name" id={`${uid}-name`} error={errors.fullName}>
+              <div>
+                <label
+                  htmlFor={`${uid}-name`}
+                  className="mb-2 block text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-espresso/70"
+                >
+                  Full name
+                </label>
                 <input
                   id={`${uid}-name`}
                   className="field"
@@ -138,95 +129,56 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
                   placeholder="e.g. Jean-Paul Mbarga"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  aria-invalid={Boolean(errors.fullName)}
+                  aria-invalid={Boolean(nameError)}
                 />
-              </Field>
-
-              {/* phone */}
-              <Field label="Phone / WhatsApp" id={`${uid}-phone`} error={errors.phone}>
-                <input
-                  id={`${uid}-phone`}
-                  className="field"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="+237 6 00 00 00 00"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  aria-invalid={Boolean(errors.phone)}
-                />
-              </Field>
-
-              {/* attendance */}
-              <fieldset>
-                <legend className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-espresso/70">
-                  Will you attend?
-                </legend>
-                <div className="grid gap-3">
-                  <Choice
-                    selected={attendance === "accepts"}
-                    onSelect={() => setAttendance("accepts")}
-                    title="Joyfully Accepts"
-                    hint="I will be there to celebrate"
-                  />
-                  <Choice
-                    selected={attendance === "declines"}
-                    onSelect={() => setAttendance("declines")}
-                    title="Regretfully Declines"
-                    hint="I'll be there in spirit"
-                  />
-                </div>
-                {errors.attendance && <p className="mt-2 text-sm text-burnt">{errors.attendance}</p>}
-              </fieldset>
+                {nameError && <p className="mt-1.5 text-sm text-burnt">{nameError}</p>}
+              </div>
 
               {/* guest count */}
-              <AnimatePresence initial={false}>
-                {attendance === "accepts" && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-espresso/70">
-                      Number of guests
-                    </p>
-                    {maxGuests > 1 ? (
-                      <div className="flex items-center justify-between rounded-2xl border border-caramel/45 bg-white/55 px-4 py-2.5">
-                        <div>
-                          <p className="font-display text-lg font-semibold text-espresso">
-                            {guestCount} {guestCount === 1 ? "guest" : "guests"}
-                          </p>
-                          <p className="text-xs text-espresso/60">Including yourself · up to {maxGuests}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Stepper
-                            label="Fewer guests"
-                            disabled={guestCount <= 1}
-                            onClick={() => setGuestCount((n) => Math.max(1, n - 1))}
-                          >
-                            −
-                          </Stepper>
-                          <Stepper
-                            label="More guests"
-                            disabled={guestCount >= maxGuests}
-                            onClick={() => setGuestCount((n) => Math.min(maxGuests, n + 1))}
-                          >
-                            +
-                          </Stepper>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="rounded-2xl border border-caramel/30 bg-white/40 px-4 py-3 text-sm text-espresso/70">
-                        This invitation is reserved for one guest.
+              <div>
+                <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-espresso/70">
+                  Number of guests
+                </p>
+                {maxGuests > 1 ? (
+                  <div className="flex items-center justify-between rounded-2xl border border-caramel/45 bg-white/55 px-4 py-2.5">
+                    <div>
+                      <p className="font-display text-lg font-semibold text-espresso">
+                        {guestCount} {guestCount === 1 ? "guest" : "guests"}
                       </p>
-                    )}
-                  </motion.div>
+                      <p className="text-xs text-espresso/60">Including yourself · up to {maxGuests}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Stepper
+                        label="Fewer guests"
+                        disabled={guestCount <= 1}
+                        onClick={() => setGuestCount((n) => Math.max(1, n - 1))}
+                      >
+                        −
+                      </Stepper>
+                      <Stepper
+                        label="More guests"
+                        disabled={guestCount >= maxGuests}
+                        onClick={() => setGuestCount((n) => Math.min(maxGuests, n + 1))}
+                      >
+                        +
+                      </Stepper>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="rounded-2xl border border-caramel/30 bg-white/40 px-4 py-3 text-sm text-espresso/70">
+                    This invitation is reserved for one guest.
+                  </p>
                 )}
-              </AnimatePresence>
+              </div>
 
               {/* note */}
-              <Field label="A blessing for the couple (optional)" id={`${uid}-note`}>
+              <div>
+                <label
+                  htmlFor={`${uid}-note`}
+                  className="mb-2 block text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-espresso/70"
+                >
+                  A blessing for the couple (optional)
+                </label>
                 <textarea
                   id={`${uid}-note`}
                   className="field min-h-28 resize-none"
@@ -236,7 +188,7 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
                   onChange={(e) => setNote(e.target.value)}
                 />
                 <p className="mt-1 text-right text-xs text-espresso/45">{note.length}/280</p>
-              </Field>
+              </div>
             </div>
 
             {submitError && (
@@ -258,7 +210,7 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
               ) : editing ? (
                 "Update My Reply"
               ) : (
-                "Send My Reply"
+                "Confirm My Attendance"
               )}
             </button>
             {editing && (
@@ -271,76 +223,12 @@ export function RsvpForm({ guest }: { guest: ResolvedGuest | null }) {
               </button>
             )}
             <p className="mt-4 text-center text-xs text-espresso/50">
-              Kindly reply by {c.rsvp.deadlineDisplay}
+              Kindly reply before {c.rsvp.deadlineDisplay}
             </p>
           </motion.form>
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-function Field({
-  label,
-  id,
-  error,
-  children,
-}: {
-  label: string;
-  id: string;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="mb-2 block text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-espresso/70">
-        {label}
-      </label>
-      {children}
-      {error && <p className="mt-1.5 text-sm text-burnt">{error}</p>}
-    </div>
-  );
-}
-
-function Choice({
-  selected,
-  onSelect,
-  title,
-  hint,
-}: {
-  selected: boolean;
-  onSelect: () => void;
-  title: string;
-  hint: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={selected}
-      onClick={onSelect}
-      className={`flex items-center gap-4 rounded-2xl border px-4 py-3.5 text-left transition-all ${
-        selected
-          ? "border-espresso bg-espresso text-ivory shadow-lg"
-          : "border-caramel/45 bg-white/55 text-espresso hover:border-caramel"
-      }`}
-    >
-      <span
-        className={`flex h-6 w-6 shrink-0 items-center justify-center rotate-45 rounded-[5px] border ${
-          selected ? "border-gold bg-gold" : "border-caramel/70"
-        }`}
-      >
-        {selected && (
-          <svg className="-rotate-45" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-espresso)" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M5 12.5l4.5 4.5L19 7.5" />
-          </svg>
-        )}
-      </span>
-      <span>
-        <span className="block font-display text-[1.15rem] font-semibold leading-tight">{title}</span>
-        <span className={`block text-xs ${selected ? "text-ivory/70" : "text-espresso/55"}`}>{hint}</span>
-      </span>
-    </button>
   );
 }
 

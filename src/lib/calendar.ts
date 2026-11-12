@@ -20,7 +20,9 @@ function toIcsUtc(d: Date): string {
 function span() {
   const first = schedule[0];
   const last = schedule[schedule.length - 1];
-  return { start: toDate(event.date, first.start), end: toDate(event.date, last.end) };
+  const start = toDate(event.date, first.start);
+  const end = "end" in last && last.end ? toDate(event.date, last.end) : new Date(start.getTime() + 8 * 3600_000);
+  return { start, end };
 }
 
 const escapeIcs = (s: string) =>

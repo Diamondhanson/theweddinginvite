@@ -6,7 +6,7 @@
    Espresso · Burnt Orange · Caramel (+ derived champagne gold & ivory)
    Change a value here and every SVG + component follows.
    ────────────────────────────────────────────────────────────── */
-@theme {
+@theme static {
   /* base swatches */
   --color-espresso: #3c2821;
   --color-night: #24150f; /* deeper espresso, page backdrop */
@@ -16,7 +16,9 @@
   --color-gold-light: #f1dfb4;
   --color-ivory: #f8f0e4;
   --color-sand: #ecdcc6;
-  --color-skin: #67331e; /* chestnut — used for figure skin tones */
+  --color-chestnut: #67331e; /* chestnut brown */
+  --color-skin: var(--color-chestnut); /* figure skin tones */
+  --color-taupe: #8e6e5f; /* warm taupe */
 
   /* semantic roles used by SVGs & components */
   --color-primary: var(--color-espresso);

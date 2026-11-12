@@ -32,17 +32,19 @@ export function Schedule() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.25em] text-burnt">
-                        {formatClock(e.start)} – {formatClock(e.end)}
+                        {formatClock(e.start)}
                       </p>
                       <h3 className="mt-1.5 font-display text-[1.5rem] font-semibold leading-tight text-espresso">
                         {e.title}
                       </h3>
-                      <p className="font-display text-base italic text-caramel">{e.subtitle}</p>
+                      {e.subtitle && <p className="font-display text-base italic text-caramel">{e.subtitle}</p>}
                     </div>
                     <Icon size={40} className="mt-1 shrink-0 text-espresso" />
                   </div>
 
-                  <p className="mt-3 text-[0.92rem] leading-relaxed text-espresso/75">{e.description}</p>
+                  {e.description && (
+                    <p className="mt-3 text-[0.92rem] leading-relaxed text-espresso/75">{e.description}</p>
+                  )}
 
                   <div className="mt-4 flex items-start gap-2.5 border-t border-dashed border-caramel/40 pt-4 text-sm text-espresso/80">
                     <svg className="mt-0.5 shrink-0 text-burnt" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

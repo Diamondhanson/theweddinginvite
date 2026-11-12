@@ -8,7 +8,6 @@ import { Monogram } from "./art/Monogram";
 import { ToghuBand } from "./art/Dividers";
 
 export function GatePass({ record, onEdit }: { record: RsvpRecord; onEdit: () => void }) {
-  const accepted = record.attendance === "accepts";
   const first = c.schedule[0];
 
   return (
@@ -24,16 +23,16 @@ export function GatePass({ record, onEdit }: { record: RsvpRecord; onEdit: () =>
         <ToghuBand />
 
         <div className="bg-lattice-dark relative px-6 pb-7 pt-8 text-center">
-          {accepted && <GemBurst />}
-          <Monogram tone="gold" className="mx-auto w-28" />
+          <GemBurst />
+          <Monogram tone="gold" className="mx-auto w-36" />
           <p className="mt-4 text-[0.65rem] font-medium uppercase tracking-[0.4em] text-gold">
-            {accepted ? "Digital Gate Pass" : "With Gratitude"}
+            Digital Gate Pass
           </p>
           <h3 className="mt-3 font-display text-[1.7rem] font-semibold leading-tight">
-            {accepted ? "You're on the list!" : "You will be missed"}
+            You&apos;re on the list!
           </h3>
           <p className="mx-auto mt-2 max-w-[28ch] text-sm leading-relaxed text-ivory/75">
-            {accepted ? c.rsvp.acceptedMessage : c.rsvp.declinedMessage}
+            {c.rsvp.acceptedMessage}
           </p>
         </div>
 
@@ -48,21 +47,14 @@ export function GatePass({ record, onEdit }: { record: RsvpRecord; onEdit: () =>
           <p className="text-[0.62rem] uppercase tracking-[0.3em] text-gold">Admit</p>
           <p className="text-gold-foil mt-1 font-script text-[2.4rem] leading-tight">{record.fullName}</p>
 
-          {accepted ? (
-            <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-left">
-              <Item label="Party of" value={`${record.guestCount} ${record.guestCount === 1 ? "guest" : "guests"}`} />
-              <Item label="Pass code" value={record.passCode} mono />
-              <Item label="Date" value={c.event.dateDisplay} span />
-              <Item label="Doors open" value={formatClock(first.start)} />
-              <Item label="Venue" value={first.venue} />
-              <Item label="City" value={`${c.event.city}, ${c.event.country}`} span />
-            </dl>
-          ) : (
-            <p className="mt-4 text-sm leading-relaxed text-ivory/70">
-              Your response has been recorded. If your plans change, you can update it any time before{" "}
-              {c.rsvp.deadlineDisplay}.
-            </p>
-          )}
+          <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-left">
+            <Item label="Party of" value={`${record.guestCount} ${record.guestCount === 1 ? "guest" : "guests"}`} />
+            <Item label="Pass code" value={record.passCode} mono />
+            <Item label="Date" value={c.event.dateDisplay} span />
+            <Item label="Arrival" value={formatClock(first.start)} />
+            <Item label="City" value={`${c.event.city}, ${c.event.country}`} />
+            <Item label="Venue" value={`${first.venue}, ${first.address}`} span />
+          </dl>
 
           {record.note && (
             <blockquote className="mt-5 rounded-xl border border-gold/30 bg-white/5 px-4 py-3 text-left font-display text-[1.05rem] italic leading-snug text-ivory/85">
@@ -71,7 +63,7 @@ export function GatePass({ record, onEdit }: { record: RsvpRecord; onEdit: () =>
           )}
         </div>
 
-        {accepted && (
+        {(
           <div className="grid gap-3 border-t border-gold/20 bg-night/40 px-6 py-6">
             <button
               type="button"

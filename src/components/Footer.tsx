@@ -17,13 +17,16 @@ export function Footer() {
           href={`https://wa.me/${c.contact.whatsappNumber}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-gold/50 px-6 py-3 text-xs tracking-[0.12em] text-gold transition-colors hover:bg-gold hover:text-espresso"
+          className="mt-8 inline-flex items-center gap-2.5 rounded-2xl border border-gold/50 px-6 py-3.5 text-left text-xs leading-relaxed tracking-[0.06em] text-gold transition-colors hover:bg-gold hover:text-espresso"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg className="shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19L4 20Z" />
             <path d="M9 9.5c.5 2.2 2.3 4 4.5 4.6l1.2-1.1 2 .9c-.4 1.3-1.6 1.8-2.8 1.5-3-.7-5.2-3-5.9-6-.2-1.2.4-2.2 1.6-2.6l.9 2Z" fill="currentColor" stroke="none" />
           </svg>
-          {c.contact.whatsappLabel}
+          <span>
+            {c.contact.whatsappLabel}
+            <span className="mt-1 block font-semibold tracking-[0.15em]">{c.contact.whatsappDisplay}</span>
+          </span>
         </a>
       </div>
       <ToghuBand />

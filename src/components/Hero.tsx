@@ -20,10 +20,10 @@ export function Hero() {
         <motion.p {...rise(0)} className="text-[0.68rem] font-medium uppercase tracking-[0.38em] text-gold">
           {c.invitationLine}
         </motion.p>
-        <motion.p {...rise(0.1)} className="mt-2 font-display text-lg italic leading-snug text-ivory/80">
-          {c.families.groom.name}
+        <motion.p {...rise(0.1)} className="mt-3 font-display text-[1.6rem] font-bold italic leading-tight text-ivory">
+          {c.couple.groom.displayName}
           <span className="block text-gold">&amp;</span>
-          {c.families.bride.name}
+          {c.couple.bride.displayName}
         </motion.p>
 
         <motion.div {...rise(0.2)} className="mx-auto mt-7 w-[78%] max-w-[330px]">
@@ -32,22 +32,20 @@ export function Hero() {
           </div>
         </motion.div>
 
-        <motion.p {...rise(0.1)} className="mt-9 text-[0.72rem] font-medium uppercase tracking-[0.4em] text-ivory/70">
-          Celebrate the union of
+        <motion.p {...rise(0.1)} className="mt-9 text-[0.78rem] font-semibold uppercase tracking-[0.38em] text-gold-light">
+          {c.inviteLine}
         </motion.p>
         <motion.h1
           {...rise(0.2)}
-          className="text-gold-foil animate-shimmer mt-2 whitespace-nowrap font-script text-[clamp(2.4rem,11vw,3.4rem)] leading-[1.15]"
+          className="text-gold-foil animate-shimmer mt-4 font-script text-[clamp(2.8rem,13vw,3.9rem)] leading-[1.1]"
         >
-          {c.couple.groom.firstName} &amp; {c.couple.bride.firstName}
+          {c.headline}
+          <span className="block">{c.year}</span>
         </motion.h1>
 
         <motion.div {...rise(0.3)} className="mt-4">
           <BeadDivider tone="dark" />
-          <p className="mt-4 font-display text-[1.65rem] font-semibold tracking-[0.18em] text-ivory">
-            {c.headline}
-          </p>
-          <p className="mx-auto mt-3 max-w-[30ch] font-display text-lg italic leading-snug text-ivory/75">
+          <p className="mx-auto mt-4 max-w-[30ch] font-display text-lg italic leading-snug text-ivory/75">
             {c.tagline}
           </p>
         </motion.div>
@@ -55,7 +53,10 @@ export function Hero() {
         <motion.div {...rise(0.4)} className="mx-auto mt-9 max-w-[300px] rounded-2xl border border-gold/35 px-5 py-5">
           <p className="text-[0.65rem] uppercase tracking-[0.35em] text-gold">{c.event.type}</p>
           <p className="mt-2 font-display text-2xl font-semibold">{c.event.dateDisplay}</p>
-          <p className="mt-1 text-sm tracking-[0.2em] text-ivory/75">{c.event.venueTeaser}</p>
+          <p className="mt-2 text-sm tracking-[0.2em] text-ivory/75">{c.event.venueTeaser}</p>
+          <p className="mt-1 text-xs leading-snug text-ivory/60">
+            {c.event.venue}, Hospital Roundabout
+          </p>
         </motion.div>
 
         <motion.div {...rise(0.5)} className="mt-10">
@@ -69,7 +70,7 @@ export function Hero() {
             </svg>
           </a>
           <p className="mt-4 text-xs tracking-[0.15em] text-ivory/55">
-            Kindly reply by {c.rsvp.deadlineDisplay}
+            Kindly reply before {c.rsvp.deadlineDisplay}
           </p>
         </motion.div>
       </div>

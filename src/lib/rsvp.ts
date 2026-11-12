@@ -4,13 +4,13 @@
  * the UI only ever talks to this file.
  */
 
-export type Attendance = "accepts" | "declines";
+/** Only guests who are attending reply, so every stored RSVP is an acceptance. */
+export type Attendance = "accepts";
 
 export interface RsvpPayload {
   fullName: string;
-  phone: string;
   attendance: Attendance;
-  /** Total party size including the guest. 0 when declining. */
+  /** Total party size including the guest. */
   guestCount: number;
   /** Blessing / note for the couple */
   note: string;
@@ -92,13 +92,8 @@ export async function clearSavedRsvp(): Promise<void> {
 }
 
 /** Lightweight client-side validation shared by the form. */
-export function validateRsvp(
-  v: Pick<RsvpPayload, "fullName" | "phone" | "attendance">,
-): Partial<Record<"fullName" | "phone" | "attendance", string>> {
-  const errors: Partial<Record<"fullName" | "phone" | "attendance", string>> = {};
+export function validateRsvp(v: Pick<RsvpPayload, "fullName">): Partial<Record<"fullName", string>> {
+  const errors: Partial<Record<"fullName", string>> = {};
   if (v.fullName.trim().length < 2) errors.fullName = "Please enter your full name.";
-  if (v.phone.replace(/\D/g, "").length < 8)
-    errors.phone = "Please enter a valid phone / WhatsApp number.";
-  if (!v.attendance) errors.attendance = "Please let us know if you can make it.";
   return errors;
 }

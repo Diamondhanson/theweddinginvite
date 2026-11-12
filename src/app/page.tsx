@@ -37,7 +37,7 @@ export default function Home({ searchParams }: { searchParams: SearchParams }) {
           <SectionHeading
             eyebrow="R.S.V.P."
             title={c.rsvp.title}
-            subtitle={`Kindly reply by ${c.rsvp.deadlineDisplay} so we can prepare a seat for you.`}
+            subtitle={`Kindly reply before ${c.rsvp.deadlineDisplay} so we can prepare a seat for you.`}
           />
           <div className="mb-10 mt-4">
             <BeadDivider />
