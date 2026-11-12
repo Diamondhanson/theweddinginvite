@@ -22,13 +22,27 @@ const pinyon = Pinyon_Script({
   weight: "400",
 });
 
+// Absolute base so share-preview image URLs resolve. Set NEXT_PUBLIC_SITE_URL to your real domain.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: weddingConfig.siteTitle,
   description: weddingConfig.siteDescription,
   openGraph: {
     title: weddingConfig.siteTitle,
     description: weddingConfig.siteDescription,
     type: "website",
+    siteName: "Diamond & Gold 2027",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: weddingConfig.siteTitle,
+    description: weddingConfig.siteDescription,
   },
 };
 
