@@ -8,16 +8,16 @@ export function Footer() {
       <ToghuBand />
       <div className="px-6 pb-12 pt-12">
         <Monogram className="mx-auto w-36" />
-        <p className="mx-auto mt-6 max-w-[28ch] font-display text-xl italic leading-snug text-ivory/85">
+        <p className="mx-auto mt-6 max-w-[28ch] font-display text-[1.7rem] italic leading-snug text-ivory">
           {c.footer.closing}
         </p>
-        <p className="mt-4 text-[0.72rem] font-medium uppercase tracking-[0.35em] text-gold">{c.hashtag}</p>
+        <p className="mt-5 text-[0.85rem] font-semibold uppercase tracking-[0.3em] text-gold-light">{c.hashtag}</p>
 
         <a
           href={`https://wa.me/${c.contact.whatsappNumber}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-2.5 rounded-2xl border border-gold/50 px-6 py-3.5 text-left text-xs leading-relaxed tracking-[0.06em] text-gold transition-colors hover:bg-gold hover:text-espresso"
+          className="mt-8 inline-flex items-center gap-2.5 rounded-2xl border border-gold/50 px-6 py-4 text-left text-[0.95rem] leading-relaxed tracking-[0.03em] text-gold-light transition-colors hover:bg-gold hover:text-espresso"
         >
           <svg className="shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19L4 20Z" />
@@ -25,7 +25,7 @@ export function Footer() {
           </svg>
           <span>
             {c.contact.whatsappLabel}
-            <span className="mt-1 block font-semibold tracking-[0.15em]">{c.contact.whatsappDisplay}</span>
+            <span className="mt-1 block text-xl font-semibold tracking-[0.15em] text-ivory">{c.contact.whatsappDisplay}</span>
           </span>
         </a>
       </div>

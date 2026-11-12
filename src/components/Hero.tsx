@@ -45,16 +45,16 @@ export function Hero() {
 
         <motion.div {...rise(0.3)} className="mt-4">
           <BeadDivider tone="dark" />
-          <p className="mx-auto mt-4 max-w-[30ch] font-display text-lg italic leading-snug text-ivory/75">
+          <p className="mx-auto mt-4 max-w-[28ch] font-display text-[1.45rem] italic leading-snug text-ivory">
             {c.tagline}
           </p>
         </motion.div>
 
-        <motion.div {...rise(0.4)} className="mx-auto mt-9 max-w-[300px] rounded-2xl border border-gold/35 px-5 py-5">
-          <p className="text-[0.65rem] uppercase tracking-[0.35em] text-gold">{c.event.type}</p>
-          <p className="mt-2 font-display text-2xl font-semibold">{c.event.dateDisplay}</p>
-          <p className="mt-2 text-sm tracking-[0.2em] text-ivory/75">{c.event.venueTeaser}</p>
-          <p className="mt-1 text-xs leading-snug text-ivory/60">
+        <motion.div {...rise(0.4)} className="mx-auto mt-9 max-w-[340px] rounded-2xl border border-gold/50 px-5 py-6">
+          <p className="text-[0.8rem] font-semibold uppercase tracking-[0.32em] text-gold-light">{c.event.type}</p>
+          <p className="mt-3 font-display text-balance text-[1.9rem] font-bold leading-tight text-ivory">{c.event.dateDisplay}</p>
+          <p className="mt-3 text-lg font-medium tracking-[0.18em] text-ivory">{c.event.venueTeaser}</p>
+          <p className="mt-1.5 text-[0.95rem] leading-snug text-ivory/90">
             {c.event.venue}, Hospital Roundabout
           </p>
         </motion.div>
