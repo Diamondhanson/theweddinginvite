@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Diamond & Gold 2027 — Wedding Invitation
 
-## Getting Started
+Mobile-first digital invitation + RSVP for the traditional wedding of Diamond & Golda.
+Next.js (App Router) · TypeScript · Tailwind CSS v4 · Framer Motion. No photos — all artwork is hand-built SVG.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Customise
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | Where |
+| --- | --- |
+| All copy: names, dates, schedule, venues, maps links, dress code, RSVP text | `src/data/wedding-config.ts` |
+| Colour tokens (Espresso / Burnt Orange / Caramel / Gold / Ivory) | `src/app/globals.css` (`@theme`) |
+| Guest list → URL slugs | `src/data/guests.ts` |
+| RSVP backend (mocked with localStorage) | `src/lib/rsvp.ts` — see `TODO: Connect Supabase client here` |
+| Calendar (.ics + Google link) | `src/lib/calendar.ts` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Personal invite links
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/?code=jean-paul-mbarga` — matched against `guests.ts` (sets the party-size limit)
+- `/?guest=Jean-Paul+Mbarga` — greets by name; matched to the list if possible
+- `/` — open form; anyone can type their name
